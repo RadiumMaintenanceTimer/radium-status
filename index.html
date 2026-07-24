@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Status Tracker</title>
+  <title>Radium Server Status</title>
   <style>
     body {
       background-color: #121214;
@@ -29,7 +29,7 @@
       text-align: center;
     }
 
-    /* Image Styling */
+    /* Image Display Area */
     .image-preview {
       width: 100%;
       max-height: 250px;
@@ -37,16 +37,17 @@
       border-radius: 8px;
       margin-bottom: 1.5rem;
       background-color: #141418;
-      display: none; /* Hidden until an image is loaded */
+      display: none; /* Hidden until valid Base64 is entered */
     }
 
-    /* Input Controls */
+    /* Input Field */
     .input-group {
       margin-bottom: 1.5rem;
     }
 
-    input[type="text"] {
+    textarea {
       width: 100%;
+      height: 80px;
       padding: 10px;
       border-radius: 6px;
       border: 1px solid #3d3d4e;
@@ -54,9 +55,11 @@
       color: #fff;
       font-size: 0.85rem;
       box-sizing: border-box;
+      resize: vertical;
+      font-family: monospace;
     }
 
-    /* Timer Grid */
+    /* Count-Up Timer */
     .timer {
       display: flex;
       justify-content: space-between;
@@ -91,14 +94,13 @@
     <!-- Displayed Image -->
     <img id="displayImage" class="image-preview" alt="Preview">
 
-    <!-- Base64 Input Field -->
+    <!-- Paste Raw Base64 Here -->
     <div class="input-group">
-      <input 
-        type="text" 
+      <textarea 
         id="base64Input" 
-        placeholder="Paste Base64 string or image URL here..." 
+        placeholder="Paste raw Base64 string here..." 
         oninput="updateImage()"
-      >
+      ></textarea>
     </div>
 
     <!-- Count-Up Timer -->
@@ -123,17 +125,24 @@
   </div>
 
   <script>
-    // 1. SET YOUR START DATE HERE (Year, Month [0-11], Day, Hours, Minutes)
-    // Note: Months are 0-indexed (0 = Jan, 1 = Feb, etc.)
+    // -------------------------------------------------------------
+    // 1. SET YOUR START DATE HERE (Year, Month [0-11], Day, Hour, Min)
+    // Note: Months start at 0 (0 = Jan, 1 = Feb, etc.)
+    // -------------------------------------------------------------
     const startDate = new Date(2024, 0, 1, 0, 0, 0); 
 
-    // Update Image from Input
+    // Raw Base64 Image Loader
     function updateImage() {
-      const inputVal = document.getElementById('base64Input').value.trim();
+      const rawBase64 = document.getElementById('base64Input').value.trim();
       const imgElem = document.getElementById('displayImage');
 
-      if (inputVal) {
-        imgElem.src = inputVal;
+      if (rawBase64) {
+        // If user already included 'data:image/...', use it; otherwise prepend header
+        if (rawBase64.startsWith('data:image')) {
+          imgElem.src = rawBase64;
+        } else {
+          imgElem.src = `data:image/png;base64,${rawBase64}`;
+        }
         imgElem.style.display = 'block';
       } else {
         imgElem.style.display = 'none';
@@ -145,7 +154,7 @@
       const now = new Date();
       const diffInSeconds = Math.floor((now - startDate) / 1000);
 
-      if (diffInSeconds < 0) return; // If date is in the future
+      if (diffInSeconds < 0) return;
 
       const days = Math.floor(diffInSeconds / (3600 * 24));
       const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
@@ -158,7 +167,7 @@
       document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
     }
 
-    // Start timer loop
+    // Start Timer
     setInterval(updateCountUp, 1000);
     updateCountUp();
   </script>
