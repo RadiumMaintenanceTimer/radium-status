@@ -2,27 +2,43 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(to bottom, #100F15, #1A1325);
+html, body { 
+margin: 0; 
+width: 100%; 
+min-height: 100%; 
+overflow-x: hidden; 
+font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+background: linear-gradient(to bottom, #100F15, #1A1325); 
 }
 
-/* Logo at the top */ 
+{ 
+box-sizing: border-box; 
+}
+
+.title, 
+.timer, 
+.discord, 
+.footer { 
+background: linear-gradient(135deg, #61FE00, #019A43); 
+-webkit-background-clip: text; 
+background-clip: text; 
+-webkit-text-fill-color: transparent; 
+color: transparent; 
+}
+
+/* Logo */ 
 .logo { 
 position: absolute; 
-top: 40px; 
+top: clamp(20px, 5vh, 40px); 
 left: 50%; 
 transform: translateX(-50%); 
 }
 
 .logo img { 
-width: 200px; 
-height: 200px; 
+width: clamp(100px, 20vw, 200px); 
+height: auto; 
 }
 
 /* Title */ 
@@ -30,112 +46,143 @@ height: 200px;
 position: absolute; 
 top: 35%; 
 left: 50%; 
-transform: translate(-50%, -30%);
-
-text-align: center;
-line-height: 1.05;
-
-background: linear-gradient(135deg, #61FE00, #019A43);
--webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
-color: transparent;
+transform: translate(-50%, -30%); 
+width: 95%; 
+text-align: center; 
+line-height: 1.05; 
 }
 
 .small { 
-font-size: 45px; 
+font-size: clamp(25px, 5vw, 45px); 
 font-weight: 700; 
 }
 
 .large { 
-font-size: 106px; 
+font-size: clamp(55px, 12vw, 106px); 
 font-weight: 900; 
 letter-spacing: -2px; 
 }
 
 .medium { 
-font-size: 27.5px; 
+font-size: clamp(16px, 3vw, 27.5px); 
 font-weight: 800; 
 }
 
 .divider { 
-position: absolute; 
-top: 120%; 
-left: 50%; 
-transform: translateX(-50%);
+margin: 20px auto 0;
 
-width: 700px;
+width: min(700px, 80vw);
 height: 3px;
-border-radius: 10px;
 
+border-radius: 10px;
 background: linear-gradient(135deg, #61FE00, #019A43);
 }
 
 /* Timer */ 
 .timer { 
 position: absolute; 
-top: 46%; 
+top: 50%; 
 left: 50%; 
 transform: translateX(-50%);
 
-font-size: 80px;
-font-weight: 800;
-text-align: center;
-line-height: 1.2;
-white-space: nowrap;
+width: 95%;
 
-background: linear-gradient(135deg, #61FE00, #019A43);
--webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
-color: transparent;
-} 
-
-.footer { 
-position: absolute; 
-bottom: 35px; 
-left: 50%; 
-transform: translateX(-50%);
-
-width: 90%;
+display: flex;
+justify-content: center;
+gap: clamp(15px, 4vw, 50px);
 
 text-align: center;
-font-size: 16px;
-font-weight: 700;
-line-height: 1.6;
-
-background: linear-gradient(135deg, #61FE00, #019A43);
--webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
-color: transparent;
 }
 
+.number { 
+font-size: clamp(35px, 8vw, 80px); 
+font-weight: 800; 
+line-height: 1;
+
+background: linear-gradient(135deg, #61FE00, #019A43);
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.label { 
+margin-top: 8px; 
+font-size: clamp(12px, 2vw, 22px); 
+font-weight: 700; 
+line-height: 1.2;
+
+background: linear-gradient(to bottom, #5B5368, #21182F);
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+
+text-shadow: none;
+}
+/* Discord */ 
 .discord { 
 position: absolute; 
-bottom: 400px; 
+bottom: 120px; 
 left: 50%; 
 transform: translateX(-50%);
 
 width: 90%;
 
 text-align: center;
-font-size: 60px;
-font-weight: 700;
-line-height: 1.6;
 
-background: linear-gradient(135deg, #61FE00, #019A43);
--webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
-color: transparent;
+font-size: clamp(25px, 6vw, 60px);
+font-weight: 700;
 }
 
 .discord-logo { 
-width: 60px; 
-height: 60px; 
+width: clamp(30px, 6vw, 60px); 
+height: auto; 
 vertical-align: middle; 
 margin-right: 6px; 
+}
+
+/* Footer */ 
+.footer { 
+position: absolute; 
+bottom: 25px; 
+left: 50%; 
+transform: translateX(-50%);
+
+width: 90%;
+
+text-align: center;
+
+font-size: clamp(11px, 2vw, 16px);
+font-weight: 700;
+line-height: 1.6;
+}
+
+
+/* iPhone landscape */ 
+@media (max-height: 500px) and (orientation: landscape) {
+
+.logo {
+    top: 10px;
+}
+
+.logo img {
+    width: 80px;
+}
+
+.title {
+    top: 30%;
+}
+
+.timer {
+    top: 55%;
+}
+
+.discord {
+    bottom: 70px;
+}
+
+.footer {
+    display: none;
+}
 }
 </style>
 </head>
@@ -156,28 +203,49 @@ margin-right: 6px;
 </div>
 
 <div class="timer" id="timer">
-    Calculating...
+    <div class="time-box">
+        <div class="number" id="days">0</div>
+        <div class="label">Days</div>
+    </div>
+
+<div class="time-box">
+    <div class="number" id="hours">0</div>
+    <div class="label">Hours</div>
 </div>
+
+<div class="time-box">
+    <div class="number" id="minutes">0</div>
+    <div class="label">Minutes</div>
+</div>
+
+<div class="time-box">
+    <div class="number" id="seconds">0</div>
+    <div class="label">Seconds</div>
+</div>
+</div>
+
 
 <script>
 const startTime = new Date("June 15, 2026 18:00:00");
 
-function updateTimer() {
-    const now = new Date();
-    const difference = now - startTime;
+function updateTimer() { 
+const now = new Date(); 
+const difference = now - startTime;
 
-    const totalSeconds = Math.floor(difference / 1000);
+const totalSeconds = Math.floor(difference / 1000);
 
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+const days = Math.floor(totalSeconds / 86400);
+const hours = Math.floor((totalSeconds % 86400) / 3600);
+const minutes = Math.floor((totalSeconds % 3600) / 60);
+const seconds = totalSeconds % 60;
 
-    document.getElementById("timer").textContent =
-        `${days}d | ${hours}h | ${minutes}m | ${seconds}s`;
+document.getElementById("days").textContent = days;
+document.getElementById("hours").textContent = hours;
+document.getElementById("minutes").textContent = minutes;
+document.getElementById("seconds").textContent = seconds;
 }
 
-updateTimer();
+updateTimer(); 
 setInterval(updateTimer, 1000);
 </script>
 
@@ -188,6 +256,7 @@ setInterval(updateTimer, 1000);
 
 <div class="footer">
     <div> ⓘ Disclaimer | @RadiumMaintenanceTimer is not affiliated with Radium. All rights reserved to Radium and its lovely developers.</div>
+</div>
 
 </body>
 </html>
