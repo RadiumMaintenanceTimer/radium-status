@@ -19,21 +19,25 @@ html, body {
   box-sizing: border-box; 
 }
 
+/* 
+   BASE SCALE SWITCH: 
+   Using 'vmin' instead of 'vw' ensures landscape mode 
+   scales based on the short screen height instead of expanding!
+*/
+:root {
+  --base-scale: 3.5vmin;
+}
+
 /* Flex Container */
 .scale-wrapper {
   width: 100%;
   max-width: 600px;
   min-height: 100vh; 
   margin: 0 auto;
-  padding: 5vw 0;
+  padding: 3vmin 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-/* Base scaling factor */
-:root {
-  --base-scale: 3vw;
 }
 
 /* Gradients */
@@ -55,7 +59,7 @@ html, body {
 }
 
 .logo img { 
-  width: 25vw; 
+  width: calc(var(--base-scale) * 7); 
   max-width: 150px;
   height: auto; 
 }
@@ -67,7 +71,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translateY(-5%); /* Keeps divider line in vertical center */
+  transform: translateY(-3%); 
 }
 
 /* Title */ 
@@ -96,27 +100,24 @@ html, body {
 /* Divider */
 .divider { 
   margin: calc(var(--base-scale) * 0.8) auto calc(var(--base-scale) * 1.5) auto;
-  width: 85vw;
+  width: 80%;
   max-width: 550px;
   height: 2px;
   border-radius: 10px;
   background: linear-gradient(135deg, #61FE00, #019A43);
 }
 
-/* 
-   TIMER SECTION (Spread out):
-   Increased gap and added space distribution across the row.
-*/ 
+/* Timer Section */ 
 .timer { 
   width: 95%;
   display: flex;
-  justify-content: space-evenly; /* Evenly spreads the numbers */
-  gap: calc(var(--base-scale) * 1.4); /* Expanded gap between boxes */
+  justify-content: space-evenly; 
+  gap: calc(var(--base-scale) * 1.2); 
   text-align: center;
 }
 
 .time-box {
-  min-width: calc(var(--base-scale) * 2.5); /* Gives each box a wider footprint */
+  min-width: calc(var(--base-scale) * 2.5); 
 }
 
 .number { 
@@ -126,7 +127,7 @@ html, body {
 }
 
 .label { 
-  margin-top: 6px; 
+  margin-top: 4px; 
   font-size: calc(var(--base-scale) * 0.6); 
   font-weight: 700; 
   line-height: 1.2;
@@ -134,7 +135,7 @@ html, body {
 
 /* BOTTOM: Discord & Footer */ 
 .discord { 
-  margin-bottom: calc(var(--base-scale) * 0.8);
+  margin-bottom: calc(var(--base-scale) * 0.6);
   text-align: center;
   font-size: calc(var(--base-scale) * 1.3);
   font-weight: 700;
@@ -153,7 +154,7 @@ html, body {
   text-align: center;
   font-size: calc(var(--base-scale) * 0.45);
   font-weight: 700;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* Glowing text highlight */
@@ -161,8 +162,18 @@ html, body {
   text-shadow: 0 0 1px rgba(97, 254, 0, 0.3);
 }
 
+/* TIGHT LANDSCAPE TWEAKS (For phones turned horizontally) */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --base-scale: 4.5vh; /* Purely scale off vertical height in landscape */
+  }
+  .center-content {
+    transform: translateY(0); /* Remove offset to maximize vertical room */
+  }
+}
+
 /* Desktop sizing limit */
-@media (min-width: 800px) {
+@media (min-width: 800px) and (min-height: 700px) {
   :root {
     --base-scale: 24px;
   }
