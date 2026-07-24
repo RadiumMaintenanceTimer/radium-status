@@ -3,162 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Radium Server Status</title>
+  <title>Status Tracker</title>
   <style>
-    /* Dark Theme & Centered Layout */
     body {
       background-color: #121214;
       color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
+      justify-content: center;
+      min-height: 100vh;
       margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: #1e1e24;
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid #2d2d38;
+      max-width: 450px;
+      width: 100%;
       text-align: center;
     }
 
-    .card {
-      background: #1e1e24;
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      border: 1px solid #2d2d38;
-      max-width: 450px;
-      width: 90%;
+    /* Image Styling */
+    .image-preview {
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      background-color: #141418;
+      display: none; /* Hidden until an image is loaded */
     }
 
-    /* Orange accent styling for Rec Room vibes */
-    .status-badge {
-      display: inline-block;
-      background-color: #ff6b00;
-      color: #fff;
-      font-weight: bold;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    /* Input Controls */
+    .input-group {
       margin-bottom: 1.5rem;
     }
 
-    h1 {
-      margin: 0 0 0.5rem 0;
-      font-size: 2rem;
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #3d3d4e;
+      background: #141418;
+      color: #fff;
+      font-size: 0.85rem;
+      box-sizing: border-box;
     }
 
-    p {
-      color: #a0a0b0;
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
-    }
-
-    /* Timer Display */
+    /* Timer Grid */
     .timer {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       background: #141418;
-      padding: 1.2rem;
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
       border: 1px solid #262630;
     }
 
-    .time-block {
+    .time-unit {
       display: flex;
       flex-direction: column;
     }
 
     .number {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: bold;
       color: #ff6b00;
     }
 
     .label {
-      font-size: 0.75rem;
-      color: #707080;
+      font-size: 0.7rem;
+      color: #808090;
       text-transform: uppercase;
-    }
-
-    /* Buttons */
-    .btn {
-      background-color: #2b2b36;
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
-
-    .btn:hover {
-      background-color: #ff6b00;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="status-badge">Maintenance Mode</div>
-    <h1>Radium RR Status</h1>
-    <p>Estimated time remaining until maintenance ends (maybe):</p>
+  <div class="container">
+    <!-- Displayed Image -->
+    <img id="displayImage" class="image-preview" alt="Preview">
 
-    <!-- Timer Elements -->
+    <!-- Base64 Input Field -->
+    <div class="input-group">
+      <input 
+        type="text" 
+        id="base64Input" 
+        placeholder="Paste Base64 string or image URL here..." 
+        oninput="updateImage()"
+      >
+    </div>
+
+    <!-- Count-Up Timer -->
     <div class="timer">
-      <div class="time-block">
-        <span class="number" id="days">99</span>
+      <div class="time-unit">
+        <span class="number" id="days">00</span>
         <span class="label">Days</span>
       </div>
-      <div class="time-block">
-        <span class="number" id="hours">23</span>
+      <div class="time-unit">
+        <span class="number" id="hours">00</span>
         <span class="label">Hours</span>
       </div>
-      <div class="time-block">
-        <span class="number" id="minutes">59</span>
+      <div class="time-unit">
+        <span class="number" id="minutes">00</span>
         <span class="label">Mins</span>
       </div>
-      <div class="time-block">
-        <span class="number" id="seconds">59</span>
+      <div class="time-unit">
+        <span class="number" id="seconds">00</span>
         <span class="label">Secs</span>
       </div>
     </div>
-
-    <!-- Gag Button -->
-    <button class="btn" onclick="addTime()">Check Server Status</button>
   </div>
 
   <script>
-    // Set initial countdown (100 days out for the joke)
-    let totalSeconds = 100 * 24 * 60 * 60;
+    // 1. SET YOUR START DATE HERE (Year, Month [0-11], Day, Hours, Minutes)
+    // Note: Months are 0-indexed (0 = Jan, 1 = Feb, etc.)
+    const startDate = new Date(2024, 0, 1, 0, 0, 0); 
 
-    function updateTimer() {
-      if (totalSeconds > 0) {
-        totalSeconds--;
+    // Update Image from Input
+    function updateImage() {
+      const inputVal = document.getElementById('base64Input').value.trim();
+      const imgElem = document.getElementById('displayImage');
+
+      if (inputVal) {
+        imgElem.src = inputVal;
+        imgElem.style.display = 'block';
+      } else {
+        imgElem.style.display = 'none';
       }
-
-      const d = Math.floor(totalSeconds / (3600 * 24));
-      const h = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-      const m = Math.floor((totalSeconds % 3600) / 60);
-      const s = Math.floor(totalSeconds % 60);
-
-      document.getElementById('days').innerText = String(d).padStart(2, '0');
-      document.getElementById('hours').innerText = String(h).padStart(2, '0');
-      document.getElementById('minutes').innerText = String(m).padStart(2, '0');
-      document.getElementById('seconds').innerText = String(s).padStart(2, '0');
     }
 
-    // Gag mechanic: Clicking "Check Status" ADDS time to the clock!
-    function addTime() {
-      totalSeconds += 7 * 24 * 3600; // Adds 7 days
-      alert("Status updated: Maintenance extended by another week!");
-      updateTimer();
+    // Count-Up Timer Logic
+    function updateCountUp() {
+      const now = new Date();
+      const diffInSeconds = Math.floor((now - startDate) / 1000);
+
+      if (diffInSeconds < 0) return; // If date is in the future
+
+      const days = Math.floor(diffInSeconds / (3600 * 24));
+      const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
+      const minutes = Math.floor((diffInSeconds % 3600) / 60);
+      const seconds = Math.floor(diffInSeconds % 60);
+
+      document.getElementById('days').innerText = String(days).padStart(2, '0');
+      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
     }
 
-    // Run interval every second
-    setInterval(updateTimer, 1000);
-    updateTimer();
+    // Start timer loop
+    setInterval(updateCountUp, 1000);
+    updateCountUp();
   </script>
 
 </body>
