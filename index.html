@@ -4,36 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* Reset & Lock Background */
+/* Reset & Full Height Setup */
 html, body { 
   margin: 0; 
   padding: 0;
   width: 100%; 
-  height: 100%; 
-  overflow: hidden; /* Prevents scrollbars when zooming */
+  min-height: 100vh; 
+  overflow-x: hidden; 
   font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
   background: linear-gradient(to bottom, #100F15, #1A1325); 
 }
 
-/* Missing Universal Selector Fixed */
 * { 
   box-sizing: border-box; 
 }
 
-/* 
-  CANVAS SCALER:
-  Sets a fixed reference frame (1000px wide) and zooms 
-  everything proportionally based on viewport width.
-*/
-.page-container {
-  width: 1000px;
-  height: 1000px;
-  position: relative;
+/* Flex Container */
+.scale-wrapper {
+  width: 100%;
+  max-width: 600px;
+  min-height: 100vh; 
   margin: 0 auto;
-  zoom: calc(100vw / 1000); 
+  padding: 5vw 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Text Gradients */
+/* Base scaling factor */
+:root {
+  --base-scale: 3vw;
+}
+
+/* Gradients */
 .title, 
 .timer, 
 .discord, 
@@ -45,187 +48,191 @@ html, body {
   color: transparent; 
 }
 
-/* Logo */ 
+/* TOP: Logo */
 .logo { 
-  position: absolute; 
-  top: 50px; 
-  left: 50%; 
-  transform: translateX(-50%); 
+  display: flex;
+  justify-content: center;
 }
 
 .logo img { 
-  width: 180px; 
+  width: 25vw; 
+  max-width: 150px;
   height: auto; 
+}
+
+/* CENTER SECTION */
+.center-content {
+  margin: auto 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(-5%); /* Keeps divider line in vertical center */
 }
 
 /* Title */ 
 .title { 
-  position: absolute; 
-  top: 260px; 
-  left: 50%; 
-  transform: translateX(-50%); 
-  width: 95%; 
+  width: 90%; 
   text-align: center; 
-  line-height: 1.05; 
+  line-height: 1.1; 
 }
 
 .small { 
-  font-size: 42px; 
+  font-size: calc(var(--base-scale) * 1.2); 
   font-weight: 700; 
 }
 
 .large { 
-  font-size: 100px; 
+  font-size: calc(var(--base-scale) * 2.8); 
   font-weight: 900; 
-  letter-spacing: -2px; 
+  letter-spacing: -1.5px; 
 }
 
 .medium { 
-  font-size: 26px; 
+  font-size: calc(var(--base-scale) * 0.7); 
   font-weight: 800; 
 }
 
+/* Divider */
 .divider { 
-  margin: 25px auto 0;
-  width: 700px;
-  height: 3px;
+  margin: calc(var(--base-scale) * 0.8) auto calc(var(--base-scale) * 1.5) auto;
+  width: 85vw;
+  max-width: 550px;
+  height: 2px;
   border-radius: 10px;
   background: linear-gradient(135deg, #61FE00, #019A43);
 }
 
-/* Timer */ 
+/* 
+   TIMER SECTION (Spread out):
+   Increased gap and added space distribution across the row.
+*/ 
 .timer { 
-  position: absolute; 
-  top: 520px; 
-  left: 50%; 
-  transform: translateX(-50%);
   width: 95%;
   display: flex;
-  justify-content: center;
-  gap: 45px;
+  justify-content: space-evenly; /* Evenly spreads the numbers */
+  gap: calc(var(--base-scale) * 1.4); /* Expanded gap between boxes */
   text-align: center;
+}
+
+.time-box {
+  min-width: calc(var(--base-scale) * 2.5); /* Gives each box a wider footprint */
 }
 
 .number { 
-  font-size: 75px; 
+  font-size: calc(var(--base-scale) * 2.2); 
   font-weight: 800; 
   line-height: 1;
-  background: linear-gradient(135deg, #61FE00, #019A43);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .label { 
-  margin-top: 8px; 
-  font-size: 20px; 
+  margin-top: 6px; 
+  font-size: calc(var(--base-scale) * 0.6); 
   font-weight: 700; 
   line-height: 1.2;
-  background: linear-gradient(to bottom, #61FE00, #019A43);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
-/* Discord */ 
+/* BOTTOM: Discord & Footer */ 
 .discord { 
-  position: absolute; 
-  bottom: 140px; 
-  left: 50%; 
-  transform: translateX(-50%);
-  width: 90%;
+  margin-bottom: calc(var(--base-scale) * 0.8);
   text-align: center;
-  font-size: 48px;
+  font-size: calc(var(--base-scale) * 1.3);
   font-weight: 700;
 }
 
 .discord-logo { 
-  width: 48px; 
+  width: calc(var(--base-scale) * 1.3); 
   height: auto; 
   vertical-align: middle; 
-  margin-right: 8px; 
+  margin-right: 6px; 
 }
 
 /* Footer */ 
 .footer { 
-  position: absolute; 
-  bottom: 30px; 
-  left: 50%; 
-  transform: translateX(-50%);
   width: 90%;
   text-align: center;
-  font-size: 15px;
+  font-size: calc(var(--base-scale) * 0.45);
   font-weight: 700;
   line-height: 1.6;
+}
+
+/* Glowing text highlight */
+.label, .small, .medium, .discord, .footer {
+  text-shadow: 0 0 1px rgba(97, 254, 0, 0.3);
+}
+
+/* Desktop sizing limit */
+@media (min-width: 800px) {
+  :root {
+    --base-scale: 24px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="page-container">
+<div class="scale-wrapper">
+  
   <div class="logo">
       <img src="BASE64_HERE" alt="Logo">
   </div>
 
-  <div class="title">
-      <div class="small">Time Since</div>
-      <div class="large">Radium</div>
-      <div class="medium">Went Down for Maintenance</div>
-      <div class="divider"></div>
-  </div>
+  <div class="center-content">
+    <div class="title">
+        <div class="small">Time Since</div>
+        <div class="large">Radium</div>
+        <div class="medium">Went Down For Maintenance</div>
+    </div>
 
-  <div class="timer" id="timer">
-      <div class="time-box">
-          <div class="number" id="days">0</div>
-          <div class="label">Days</div>
-      </div>
-      <div class="time-box">
-          <div class="number" id="hours">0</div>
-          <div class="label">Hours</div>
-      </div>
-      <div class="time-box">
-          <div class="number" id="minutes">0</div>
-          <div class="label">Mins</div>
-      </div>
-      <div class="time-box">
-          <div class="number" id="seconds">0</div>
-          <div class="label">Secs</div>
-      </div>
+    <div class="divider"></div>
+
+    <div class="timer" id="timer">
+        <div class="time-box">
+            <div class="number" id="days">0</div>
+            <div class="label">Days</div>
+        </div>
+        <div class="time-box">
+            <div class="number" id="hours">0</div>
+            <div class="label">Hours</div>
+        </div>
+        <div class="time-box">
+            <div class="number" id="minutes">0</div>
+            <div class="label">Mins</div>
+        </div>
+        <div class="time-box">
+            <div class="number" id="seconds">0</div>
+            <div class="label">Secs</div>
+        </div>
+    </div>
   </div>
 
   <div class="discord">
-      <div>
-        <img src="BASE64_HERE" class="discord-logo" alt="Discord">
-        <a href="https://discord.gg/radium-rr" style="text-decoration: none; color: inherit;">Radium Discord</a>
-      </div>
+      <img src="BASE64_HERE" class="discord-logo" alt="Discord Logo">
+      <a href="https://discord.gg/radium-rr" style="text-decoration: none; color: inherit;">Radium Discord</a>
   </div>
 
   <div class="footer">
-      <div> Site created by <a href="https://discord.com/users/1112879692001841172" style="text-decoration: none; color: inherit;">@TapsDeveloper</a> on Discord!<br>ⓘ Disclaimer | @RadiumMaintenanceTimer is not affiliated with Radium. All rights reserved to Radium and its lovely developers.</div>
+      <div>Site created by <a href="https://discord.com/users/1112879692001841172" style="text-decoration: none; color: inherit;">@TapsDeveloper</a> on Discord!<br>ⓘ Disclaimer | @RadiumMaintenanceTimer is not affiliated with Radium. All rights reserved to Radium and its lovely developers.</div>
   </div>
+  
 </div>
 
 <script>
 const startTime = new Date("June 15, 2026 18:00:00");
-
 function updateTimer() { 
   const now = new Date(); 
   const difference = now - startTime;
-
   const totalSeconds = Math.floor(difference / 1000);
-
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-
   document.getElementById("days").textContent = days;
   document.getElementById("hours").textContent = hours;
   document.getElementById("minutes").textContent = minutes;
   document.getElementById("seconds").textContent = seconds;
 }
-
 updateTimer(); 
 setInterval(updateTimer, 1000);
 </script>
