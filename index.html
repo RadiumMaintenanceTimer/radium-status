@@ -40,7 +40,8 @@ html, body {
 .title, 
 .timer, 
 .discord, 
-.footer { 
+.footer,
+.status-label { 
   background: linear-gradient(135deg, #61FE00, #019A43); 
   -webkit-background-clip: text; 
   background-clip: text; 
@@ -127,10 +128,6 @@ html, body {
 .status-light.inactive {
   background:#61FE00;
   color:#61FE00;
-}
-
-.status-label {
-  color:white;
 }
 
 @keyframes pulse {
@@ -340,15 +337,13 @@ const light = document.getElementById("statusLight");
 const label = document.getElementById("statusLabel");
 const status = document.querySelector(".status");
 
+status.style.display = "flex";
 
 if(!maintenanceActive){
 
     // Show online status
-    status.style.display = "flex";
-
     light.className = "status-light inactive";
-    label.textContent = "Online";
-    label.style.color = "#61FE00";
+    label.textContent = "NO, Radium is not down.";
 
     setTimer(0,0,0,0);
 
@@ -357,8 +352,9 @@ if(!maintenanceActive){
 }
 
 
-// Hide status during maintenance
-status.style.display = "none";
+// Show down status
+light.className = "status-light inactive";
+label.textContent = "YES, Radium has been down for:";
 
 
 const now = new Date();
